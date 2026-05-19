@@ -1,0 +1,10 @@
+[functions]
+  directory = "netlify/functions"
+
+[build]
+  publish = "public"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
