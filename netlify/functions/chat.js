@@ -25,13 +25,12 @@ FAQs:
 YOUR BEHAVIOUR:
 - Be warm, adventurous and concise
 - Use emojis lightly
-- If someone wants to book → ask for their Name + Email + which trip they want
-- If unsure about anything → say the MadFun team will follow up and ask for contact details
+- If someone wants to book ask for their Name + Email + which trip they want
+- If unsure about anything say the MadFun team will follow up and ask for contact details
 - Never make up information not listed above
 `;
 
 exports.handler = async (event) => {
-  // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -63,27 +62,6 @@ exports.handler = async (event) => {
     });
 
     const data = await response.json();
-
-    // Save lead if email detected
-    const emailMatch = message.match(/[\w.-]+@[\w.-]+\.\w+/);
-    if (emailMatch && process.env.AIRTABLE_KEY && process.env.AIRTABLE_BASE_ID) {
-      await fetch(`https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/Leads`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.AIRTABLE_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fields: {
-            Email: emailMatch[0],
-            Message: message,
-            Company: 'MadFun Adventures',
-            Date: new Date().toISOString(),
-            Source: 'Website Chatbot'
-          }
-        })
-      });
-    }
 
     return {
       statusCode: 200,
