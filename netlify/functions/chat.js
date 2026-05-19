@@ -64,7 +64,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: CORS_HEADERS,
-      body: JSON.stringify({ reply: data.content[0].text })
+      body: JSON.stringify({ reply: data.content?.[0]?.text || JSON.stringify(data) })
     };
 
   } catch (err) {
