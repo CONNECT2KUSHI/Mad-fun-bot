@@ -24,7 +24,7 @@ FAQs:
 YOUR BEHAVIOUR:
 - Be warm, adventurous and concise
 - Use emojis lightly
-- If someone wants to book ask for Name + Email + which trip
+- If someone wants to book ask for their Name + Email + which trip
 - Never make up information not listed above
 `;
 
@@ -35,8 +35,33 @@ const CORS_HEADERS = {
   'Content-Type': 'application/json'
 };
 
+async function saveLead(email, message, tripInterest) {
+  try {
+    await fetch(
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/MadFun%20Leads`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.AIRTABLE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fields: {
+            Email: email,
+            Message: message,
+            'Trip Interest': tripInterest,
+            Date: new Date().toISOString().split('T')[0],
+            Source: 'Website Chatbot'
+          }
+        })
+      }
+    );
+  } catch (err) {
+    console.log('Airtable error:', err.message);
+  }
+}
+
 exports.handler = async (event) => {
-  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: CORS_HEADERS, body: '' };
   }
@@ -60,11 +85,28 @@ exports.handler = async (event) => {
     });
 
     const data = await response.json();
+    const reply = data.content?.[0]?.text || JSON.stringify(data);
+
+    // Detect email and save lead
+    const emailMatch = message.match(/[\w.-]+@[\w.-]+\.\w+/);
+    if (emailMatch) {
+      // Detect trip interest from conversation
+      let tripInterest = 'Not specified';
+      const fullChat = [...history, { role: 'user', content: message }]
+        .map(m => m.content).join(' ').toLowerCase();
+      
+      if (fullChat.includes('ladakh')) tripInterest = 'Ladakh Roadtrip';
+      else if (fullChat.includes('bhutan')) tripInterest = 'Bhutan Adventure';
+      else if (fullChat.includes('munsiyari')) tripInterest = 'Munsiyari Roadtrip';
+      else if (fullChat.includes('blossom')) tripInterest = 'Ladakh Blossom Festival';
+
+      await saveLead(emailMatch[0], message, tripInterest);
+    }
 
     return {
       statusCode: 200,
       headers: CORS_HEADERS,
-      body: JSON.stringify({ reply: data.content?.[0]?.text || JSON.stringify(data) })
+      body: JSON.stringify({ reply })
     };
 
   } catch (err) {
