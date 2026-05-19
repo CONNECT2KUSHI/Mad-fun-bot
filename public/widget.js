@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'https://elegant-heliotrope-aa39f8.netlify.app/.netlify/functions/chat';
+  const API_URL = 'https://mad-fun-bot-production.up.railway.app/chat';
   let history = [];
 
   // Inject styles
