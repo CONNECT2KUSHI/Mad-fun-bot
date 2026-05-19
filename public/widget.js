@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'https://mad-fun-bot-production.up.railway.app/chat';
+  const API_URL = 'mad-fun-bot-production-36c4.up.railway.app';
   let history = [];
 
   // Inject styles
