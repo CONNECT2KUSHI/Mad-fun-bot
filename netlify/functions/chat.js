@@ -4,43 +4,41 @@ MadFun specializes in offbeat adventure group travel for ages 18–38.
 125+ trips, 1500+ happy travellers over 12 years.
 
 UPCOMING TRIPS:
-1. Ladakh Roadtrip June 2026 — 11D/10N — ₹44,999 — Departs 18 June from Delhi — Max 12 people
-2. Ladakh Blossom Festival — 8D/7N — ₹23,499
-3. Munsiyari Roadtrip — 8D/7N — ₹26,500
-4. Bhutan Adventure — 8D/7N — ₹36,750
+1. Ladakh Roadtrip June 2026 — 11D/10N — Rs.44,999 — Departs 18 June from Delhi — Max 12 people
+2. Ladakh Blossom Festival — 8D/7N — Rs.23,499
+3. Munsiyari Roadtrip — 8D/7N — Rs.26,500
+4. Bhutan Adventure — 8D/7N — Rs.36,750
 
 INCLUSIONS (Ladakh Roadtrip):
 SUV travel, twin-sharing stay, breakfast from Day 2, dinner from Day 1,
 Inner Line permits, trip leaders, photography workshop, medical kit, emergency oxygen.
-
 EXCLUSIONS: Lunch, entry fees, camel ride charges, travel to/from Delhi.
 
 FAQs:
-- Safe for solo women? Yes, absolutely. Many past travellers are solo women.
-- Solo joiners welcome? Yes, most people join solo and leave with a great friend group.
-- Group size? Around 12 travellers max.
+- Safe for solo women? Yes, absolutely.
+- Solo joiners welcome? Yes!
+- Group size? Around 12 max.
 - Accommodation? Twin-sharing throughout.
-- How to book? WhatsApp +918275443366 or visit madfun.in/contact
+- How to book? WhatsApp +918275443366 or madfun.in/contact
 
 YOUR BEHAVIOUR:
 - Be warm, adventurous and concise
 - Use emojis lightly
-- If someone wants to book ask for their Name + Email + which trip they want
-- If unsure about anything say the MadFun team will follow up and ask for contact details
+- If someone wants to book ask for Name + Email + which trip
 - Never make up information not listed above
 `;
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Accept',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async (event) => {
+  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      },
-      body: ''
-    };
+    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
   }
 
   try {
@@ -65,16 +63,15 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: CORS_HEADERS,
       body: JSON.stringify({ reply: data.content[0].text })
     };
 
   } catch (err) {
     return {
-      statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ 
-        reply: "Error: " + err.message
-      })
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ reply: 'Error: ' + err.message })
     };
   }
+};
