@@ -127,7 +127,15 @@
       });
       const data = await res.json();
       document.getElementById('mf-typing')?.remove();
-      msgs.innerHTML += `<div class="mf-bot">${data.reply}</div>`;
+      msgs.innerHTML += `
+  <div class="mf-bot" id="mf-typing" style="display:flex;gap:5px;align-items:center;padding:12px">
+    <span style="width:8px;height:8px;background:#FF8C00;border-radius:50%;
+      display:inline-block;animation:mfbounce 1s 0s infinite"></span>
+    <span style="width:8px;height:8px;background:#FF8C00;border-radius:50%;
+      display:inline-block;animation:mfbounce 1s 0.2s infinite"></span>
+    <span style="width:8px;height:8px;background:#FF8C00;border-radius:50%;
+      display:inline-block;animation:mfbounce 1s 0.4s infinite"></span>
+  </div>`;
       history.push({ role: 'assistant', content: data.reply });
     } catch {
       document.getElementById('mf-typing')?.remove();
