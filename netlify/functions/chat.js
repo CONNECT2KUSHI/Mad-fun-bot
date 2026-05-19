@@ -74,8 +74,7 @@ exports.handler = async (event) => {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ 
-        reply: "Sorry, something went wrong! Please WhatsApp us at +918275443366 🙏" 
+        reply: "Error: " + err.message
       })
     };
   }
-};
